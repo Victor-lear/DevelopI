@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sso-frontend-guanchen-hou
+  namespace: assignment
+  labels:
+    name: assignment
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: sso-frontend-guanchen-hou.assignment.eks004.en.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: 
+                name: sso-frontend-guanchen-hou
+                port: 
+                  number: 3000

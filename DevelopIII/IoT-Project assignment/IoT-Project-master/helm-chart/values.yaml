@@ -1,0 +1,89 @@
+namespace: level2
+
+deployParams:
+  server:
+    name: server-dave-lee
+    replicaCount: 1
+    labels:
+      - labelKey: component
+        labelValue: server
+      - labelKey: student
+        labelValue: dave-lee
+  iothubMqtt:
+    name: mqtt-dave-lee
+    replicaCount: 1
+    labels:
+      - labelKey: component
+        labelValue: mqtt
+      - labelKey: student
+        labelValue: dave-lee
+
+containerParams:
+  server:
+    repository: ensaas
+    imageName: iot-home-server
+    tag: 2.0.0
+    port: 3000
+    resources:
+      limits:
+        cpu: 20m
+        memory: 64Mi
+        ephemeralStorage: 64Mi
+      requests:
+        cpu: 20m
+        memory: 64Mi
+  mqtt:
+    repository: ensaas
+    imageName: iot-home-mqtt
+    tag: 2.0.0
+    resources:
+      limits:
+        cpu: 20m
+        memory: 64Mi
+        ephemeralStorage: 128Mi
+      requests:
+        cpu: 20m
+        memory: 64Mi
+
+svcClusterIps:
+  server:
+    name: server-dave-lee
+    selectors:
+      - selectorKey: component
+        selectorValue: server
+      - selectorKey: student
+        selectorValue: dave-lee
+    ports:
+      - port: 3000
+        targetPort: 3000
+
+global:
+  database:
+    secretName: assignment-secret
+  url:
+    host: .assignment.eks004.en.internal
+  ensaasApps:
+    apiSso:
+      internalUrl: http://api.sso.ensaas.en.internal/v4.0
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: iot-home-dave-lee
+      paths:
+        - path: /?(.*)
+          backend:
+            serviceName: server-dave-lee
+            servicePort: 3000
+#   tls: []
+#   #  - secretName: chart-example-tls
+#   #    hosts:
+#   #      - chart-example.local
+
+# nodeSelector: {}
+# tolerations: []
+# affinity: {}

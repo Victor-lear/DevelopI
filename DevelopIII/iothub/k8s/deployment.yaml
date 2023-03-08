@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iothub-k8s-guanchen-hou
+  labels:
+    name: assignment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      component: iothub
+      student: guanchen-hou
+  template:
+    metadata:
+      labels:
+        component: iothub
+        student: guanchen-hou
+    spec:
+      containers:
+        - name: mqtt
+          image: guanchenhou/iothub-demo:demo25
+          resources:
+            limits:
+              cpu: 20m
+              memory: 64Mi
+              ephemeral-storage: 64Mi
+            requests:
+              cpu: 20m
+              memory: 64Mi
+          env:
+            - name: ENSAAS_SERVICES
+              valueFrom:
+                secretKeyRef:
+                  name: assignment-secret
+                  key: ENSAAS_SERVICES

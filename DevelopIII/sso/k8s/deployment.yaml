@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sso-frontend-guanchen-hou
+  namespace: assignment
+  labels:
+    name: assignment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      component: sso
+      student: guanchen-hou
+  template:
+    metadata:
+      namespace: assignment
+      labels:
+        component: sso
+        student: guanchen-hou
+    spec:
+      containers:
+        - name: static
+          image: guanchenhou/sso-frontend:demo
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 20m
+              memory: 32Mi
+              ephemeral-storage: 32Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
